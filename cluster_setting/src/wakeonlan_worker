@@ -1,0 +1,23 @@
+#!/bin/python3
+import argparse
+import subprocess
+
+HOST_MAC_CSV = '/projects/setup/host_mac'
+def main(target):
+    with open(HOST_MAC_CSV, 'r') as f:
+        host_mac = f.read().splitlines()
+    host_mac = [l.split(',') for l in host_mac]
+    host_mac = {l[0]: l[1] for l in host_mac}
+
+    if target not in host_mac.keys():
+        raise ValueError(f"Given hostname {target} does not exist in host_mac csv file, {HOST_MAC_CSV}.")
+    
+    target_mac = host_mac[target]
+    subprocess.run(f"wakeonlan {target}".split())
+    print(f'Magic packet sent to {target_mac}, {target}')
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('host', help='target host name to be resumed.')
+    args = parser.parse_args()
+    main(args.host)

@@ -1,0 +1,4 @@
+#!/bin/bash
+# suspends executer machine
+echo "`date` Suspend invoked by slurmctld." >>/var/log/power_save.log
+sudo systemctl suspend
